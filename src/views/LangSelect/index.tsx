@@ -1,66 +1,84 @@
 import React from 'react';
 import { useLocalStorage } from '../../utilities/hooks';
-import { Button, Radio } from 'antd';
-import { RadioChangeEvent } from 'antd/es/radio';
+import { Button, Row, Col } from 'antd';
 import './styles.css';
 import { Link } from 'react-router-dom';
 
 const LANG_SET = [
     {
         shortCode: 'EN',
-        label: 'English'
+        label: 'English',
+        startLabel: 'Start the survey'
     },
     {
         shortCode: 'DE',
-        label: 'German'
+        label: 'German',
+        startLabel: 'Starten Sie die Umfrage'
     },
     {
         shortCode: 'AR',
-        label: 'Arabice'
+        label: 'Arabic',
+        startLabel: 'بدء الاستطلاع'
     },
     {
         shortCode: 'HY',
-        label: 'Armenian'
+        label: 'Armenian',
+        startLabel: 'Սկսեք հարցումը'
     },
     {
         shortCode: 'CS',
-        label: 'Czech'
+        label: 'Czech',
+        startLabel: 'Zahájit průzkum'
     },
     {
         shortCode: 'DA',
-        label: 'Danish'
+        label: 'Danish',
+        startLabel: 'Start undersøgelsen'
     },
     {
         shortCode: 'NL',
-        label: 'Dutch'
+        label: 'Dutch',
+        startLabel: 'Start de enquête'
     },
     {
         shortCode: 'FA',
-        label: 'Persian'
+        label: 'Persian',
+        startLabel: 'نظرسنجی را شروع کنید'
     },
     {
         shortCode: 'FI',
-        label: 'Finnish'
+        label: 'Finnish',
+        startLabel: 'Aloita kysely'
     },
     {
         shortCode: 'FR',
-        label: 'French'
+        label: 'French',
+        startLabel: 'Lancer l\'enquête'
     },
     {
         shortCode: 'HE',
-        label: 'Hebrew'
+        label: 'Hebrew',
+        startLabel: 'התחל את הסקר'
     },
     {
         shortCode: 'IT',
-        label: 'Italian'
+        label: 'Italian',
+        startLabel: 'Inizia il sondaggio'
     },
     {
         shortCode: 'RO',
-        label: 'Romanian'
+        label: 'Romanian',
+        startLabel: 'Începeți sondajul'
     },
     {
         shortCode: 'ZH',
-        label: 'Chinese'
+        label: 'Chinese',
+        startLabel: '开始调查'
+    },
+    {
+        shortCode: 'ES',
+        label: 'Spanish',
+        startLabel: 'Comience la encuesta',
     },
 ];
 export const LangSelectPage = () => {
@@ -70,20 +88,49 @@ export const LangSelectPage = () => {
 
     return (
         <div className='language-selection'>
-            <Radio.Group
-                value={gdsLang}
-                onChange={(event: RadioChangeEvent) => setGdsLang(event.target.value)}
-            >
+            <Row>
+                <Col
+                    span={24}
+                >
+                    <img
+                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/gds2020.jpg'
+                        alt='Global Drugs Surver'
+                        width='100%'
+                        height='auto'
+                    />
+                </Col>
+            </Row>
+            <br/><hr/><br/>
+            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]}>
                 { LANG_SET.map( lang =>
-                    <Radio.Button
+                    <Col
                         key={lang.shortCode}
-                        value={lang.shortCode}
+                        span={6}
                     >
-                        {lang.label}
-                    </Radio.Button>)}
-            </Radio.Group>
-            { selectedLang && <Link to={gdsLang} ><Button>
-            </Button></Link> }
+                        <Button
+                            value={lang.shortCode}
+                            onClick={()=>setGdsLang(lang.shortCode)}
+                            className='lang-button'
+                            size='large'
+                            type={lang.shortCode === gdsLang ? 'primary' : 'dashed'}
+                        >
+                            {lang.label}
+                        </Button>
+                    </Col>
+                )}
+            </Row>
+            <br/><hr/><br/>
+            <Row>
+                { selectedLang && <Col
+                    span={24}
+                >
+                    <Link to={gdsLang} className='start-survey-button'>
+                        <Button size='large' type='primary'>
+                            {selectedLang.startLabel}
+                        </Button>
+                    </Link>
+                </Col>}
+            </Row>
         </div>
     );
 };
