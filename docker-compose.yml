@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  organization-manager:
+    image: 'survey:local-latest'
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - ENV=development
+    volumes:
+        - ./src:/opt/om/src
+    ports:
+      - "1419:1419"
+    command: yarn start
