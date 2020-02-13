@@ -87,14 +87,14 @@ export const LangSelectPage = () => {
     const selectedLang = LANG_SET.find(l => l.shortCode === gdsLang);
 
     return (
-        <div className='language-selection'>
+        <div className='page'>
             <Row>
                 <Col
                     span={24}
                 >
                     <img
-                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/gds2020.jpg'
-                        alt='Global Drugs Surver'
+                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
+                        alt='Global Drugs survey'
                         width='100%'
                         height='auto'
                     />
