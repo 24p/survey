@@ -1,3 +1,10 @@
 .loading-col {
     text-align: center;
 }
+
+.navigate-col {
+    padding: 16px;
+}
+.navigate-button {
+    width: 100%;
+}
