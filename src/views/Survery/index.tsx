@@ -17,9 +17,49 @@ export type Condition = [
     QuestionAnswer
 ];
 
+export type NumberQuestion = {
+    type: 'number';
+    name: string;
+    title: string;
+};
+
+export type DateQuestion = {
+    type: 'date';
+    name: string;
+    title: string;
+};
+
+export type TextQuestion = {
+    type: 'text';
+    name: string;
+    title: string;
+    maxCharacters?: number;
+    minCharacters?: number;
+}
+
+export type ImageOption = {
+    type: 'image';
+    name: string;
+    url: string;
+}
+export type TextOption = {
+    type: 'text';
+    name: string;
+    title: string;
+}
+export type MultiQuestion = {
+    type: 'multi',
+    name: string;
+    title: string;
+    maxOptions: number;
+    minOptions: number;
+    options: ReadonlyArray<ImageOption | TextOption>
+}
+
 export type Page = {
     name: string;
     conditions?: ReadonlyArray<Condition>;
+    questions: ReadonlyArray<MultiQuestion | TextQuestion | DateQuestion | NumberQuestion>;
 };
 
 const checkCondition = (condition: Condition) => {
