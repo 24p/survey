@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect, useParams } from 'react-router-dom';
 import { LangSelectPage } from '../LangSelect';
-import { SurveyPage } from '../Survery';
+import { Survey } from '../Survery';
 import './styles.css';
 
 const SURVEY_ID = 'xxx-xxxx-xxxx-xxxx';
@@ -23,7 +23,7 @@ export const App = () => {
                     <LangComponent />
                 </Route>
                 <Route exact path="/:lang/:surveyId">
-                    <SurveyPage />
+                    <Survey />
                 </Route>
             </Switch>
         </BrowserRouter>

@@ -3,10 +3,75 @@ import { useParams } from 'react-router-dom';
 import './styles.css';
 import { get } from '../../utilities/xhr';
 import { useLocalStorage } from '../../utilities/hooks';
-import { Button, Col, Icon, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import { LANG_SET } from '../LangSelect';
+import { SurveyPage } from '../../components/SurveyPage';
+import { LoadingIndicator } from '../../components/LoadingIndicator';
 
-export const SurveyPage = () => {
+export type ConditionType = '<' | '>' | '=' | '!';
+export type QuestionKey = string;
+export type QuestionAnswer = string;
+export type Condition = [
+    QuestionKey,
+    ConditionType,
+    QuestionAnswer
+];
+
+export type Page = {
+    name: string;
+    conditions?: ReadonlyArray<Condition>;
+};
+
+const checkCondition = (condition: Condition) => {
+    const questionKey = condition[0];
+    const conditionType = condition[1];
+    const expectedAnswer = condition[2];
+    const questionAnswer = localStorage.getItem(questionKey);
+
+    switch (conditionType) {
+        case '!':
+            if (
+                String(questionAnswer).replace(' ', '')
+                === String(expectedAnswer).replace(' ', '')
+            ) return false;
+            break;
+        case '<':
+            if (
+                Number(questionAnswer) >= Number(expectedAnswer)
+            ) return false;
+            break;
+        case '=':
+            if (
+                String(questionAnswer).replace(' ', '')
+                !== String(expectedAnswer).replace(' ', '')
+            ) return false;
+            break;
+        case '>':
+            if (
+                Number(questionAnswer) <= Number(expectedAnswer)
+            ) return false;
+            break;
+    }
+
+    return true
+};
+
+const conditionsFulfilled = (page: Page): boolean => {
+    if (
+        !page.hasOwnProperty('condition')
+        || !page.conditions
+        || page.conditions.length !== 3
+    ) {
+        return true;
+    }
+
+    // if one condition is not fulfilled, returns false
+    page.conditions.forEach(checkCondition);
+
+    return true;
+};
+
+export const Survey = () => {
     const {lang, surveyId} = useParams();
     if(!lang) {
 
@@ -14,7 +79,7 @@ export const SurveyPage = () => {
     }
     const selectedLang = LANG_SET.get(lang);
 
-    const [survey, setSurvey] = useLocalStorage<any>('gds_survey', null);
+    const [survey, setSurvey] = useLocalStorage<ReadonlyArray<Page> | null>('gds_survey', null);
     const [page, setPage] = useLocalStorage<number>('gds_page', 0);
 
     const onPreviousPageClick = () => {
@@ -45,29 +110,21 @@ export const SurveyPage = () => {
     }, [lang, surveyId]);
 
     if (!survey || !selectedLang) {
-        return <div className='page'>
-            <Row>
-                <Col
-                    span={24}
-                >
+        return <LoadingIndicator />;
+    }
 
-                    <img
-                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
-                        alt='Global Drugs Survey'
-                        width='100%'
-                        height='auto'
-                    />
-                </Col>
-            </Row>
-            <Row>
-                <Col
-                    span={24}
-                >
+    if (page > survey.length) {
+        // TODO return submit page
 
-                    <Icon type="loading" />
-                </Col>
-            </Row>
-        </div>
+        return <LoadingIndicator />;
+    }
+
+    const selectedPage: Page = survey[page];
+
+    if (!conditionsFulfilled(page)) {
+        setPage((page: number) => page + 1);
+
+        return <LoadingIndicator />;
     }
 
     return (
@@ -87,7 +144,7 @@ export const SurveyPage = () => {
                     span={24}
                     className='loading-col'
                 >
-                    <Icon type="loading" />
+                    <SurveyPage page={selectedPage} />
                 </Col>
             </Row>
             <br/><hr/><br/>
