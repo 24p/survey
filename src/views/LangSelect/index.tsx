@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocalStorage } from '../../utilities/hooks';
-import { Button, Row, Col } from 'antd';
 import './styles.css';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +11,7 @@ export const LANG_SET = new Map([
             startLabel: 'Start the survey',
             nextPageLabel: 'next page',
             previousPageLabel: 'previous page   ',
-        }
+        },
     ],
     [
         'DE',
@@ -21,7 +20,7 @@ export const LANG_SET = new Map([
             startLabel: 'Starten Sie die Umfrage',
             nextPageLabel: 'Nächste Seite',
             previousPageLabel: 'vorherige Seite',
-        }
+        },
     ],
     [
         'AR',
@@ -30,7 +29,7 @@ export const LANG_SET = new Map([
             startLabel: 'بدء الاستطلاع',
             nextPageLabel: 'الصفحة التالية',
             previousPageLabel: 'الصفحة السابقة',
-        }
+        },
     ],
     [
         'HY',
@@ -39,7 +38,7 @@ export const LANG_SET = new Map([
             startLabel: 'Սկսեք հարցումը',
             nextPageLabel: 'հաջորդ էջը',
             previousPageLabel: 'Նախորդ էջ',
-        }
+        },
     ],
     [
         'CS',
@@ -48,7 +47,7 @@ export const LANG_SET = new Map([
             startLabel: 'Zahájit průzkum',
             nextPageLabel: 'další strana',
             previousPageLabel: 'předchozí stránka',
-        }
+        },
     ],
     [
         'DA',
@@ -57,7 +56,7 @@ export const LANG_SET = new Map([
             startLabel: 'Start undersøgelsen',
             nextPageLabel: 'Næste side',
             previousPageLabel: 'forrige side',
-        }
+        },
     ],
     [
         'NL',
@@ -66,7 +65,7 @@ export const LANG_SET = new Map([
             startLabel: 'Start de enquête',
             nextPageLabel: 'volgende bladzijde',
             previousPageLabel: 'vorige bladzijde',
-        }
+        },
     ],
     [
         'FA',
@@ -75,7 +74,7 @@ export const LANG_SET = new Map([
             startLabel: 'نظرسنجی را شروع کنید',
             nextPageLabel: 'صفحه بعد',
             previousPageLabel: 'صفحه قبلی',
-        }
+        },
     ],
     [
         'FI',
@@ -84,7 +83,7 @@ export const LANG_SET = new Map([
             startLabel: 'Aloita kysely',
             nextPageLabel: 'seuraava sivu',
             previousPageLabel: 'Edellinen sivu',
-        }
+        },
     ],
     [
         'FR',
@@ -93,7 +92,7 @@ export const LANG_SET = new Map([
             startLabel: 'Lancer l\'enquête',
             nextPageLabel: 'page suivante',
             previousPageLabel: 'page précédente',
-        }
+        },
     ],
     [
         'HE',
@@ -102,7 +101,7 @@ export const LANG_SET = new Map([
             startLabel: 'התחל את הסקר',
             nextPageLabel: 'עמוד הבא',
             previousPageLabel: 'עמוד קודם',
-        }
+        },
     ],
     [
         'IT',
@@ -111,7 +110,7 @@ export const LANG_SET = new Map([
             startLabel: 'Inizia il sondaggio',
             nextPageLabel: 'pagina successiva',
             previousPageLabel: 'pagina precedente',
-        }
+        },
     ],
     [
         'RO',
@@ -120,7 +119,7 @@ export const LANG_SET = new Map([
             startLabel: 'Începeți sondajul',
             nextPageLabel: 'pagina următoare',
             previousPageLabel: 'pagina precedentă',
-        }
+        },
     ],
     [
         'ZH',
@@ -129,7 +128,7 @@ export const LANG_SET = new Map([
             startLabel: '开始调查',
             nextPageLabel: '下一页',
             previousPageLabel: '上一页',
-        }
+        },
     ],
     [
         'ES',
@@ -138,7 +137,7 @@ export const LANG_SET = new Map([
             startLabel: 'Comience la encuesta',
             nextPageLabel: 'siguiente página',
             previousPageLabel: 'pagina anterior',
-        }
+        },
     ],
 ]);
 export const LangSelectPage = () => {
@@ -148,49 +147,34 @@ export const LangSelectPage = () => {
 
     return (
         <div className='page'>
-            <Row>
-                <Col
-                    span={24}
-                >
-                    <img
-                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
-                        alt='Global Drugs survey'
-                        width='100%'
-                        height='auto'
-                    />
-                </Col>
-            </Row>
+            <img
+                src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
+                alt='Global Drugs survey'
+                width='100%'
+                height='auto'
+            />
             <br/><hr/><br/>
-            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]}>
-                { Array.from(LANG_SET).map( ([shortCode, lang]) =>
-                    <Col
+
+            <div className='lang-buttons'>
+                {Array.from(LANG_SET).map(([shortCode, lang]) =>
+                    <button
                         key={shortCode}
-                        span={6}
+                        value={shortCode}
+                        onClick={() => setGdsLang(shortCode)}
+                        className={`button ${shortCode === gdsLang ? 'selected' : ''}`}
                     >
-                        <Button
-                            value={shortCode}
-                            onClick={()=>setGdsLang(shortCode)}
-                            className='lang-button'
-                            size='large'
-                            type={shortCode === gdsLang ? 'primary' : 'dashed'}
-                        >
-                            {lang.label}
-                        </Button>
-                    </Col>
+                        {lang.label}
+                    </button>,
                 )}
-            </Row>
+            </div>
             <br/><hr/><br/>
-            <Row>
-                { selectedLang && <Col
-                    span={24}
-                >
-                    <Link to={gdsLang} className='start-survey-button'>
-                        <Button size='large' type='primary'>
-                            {selectedLang.startLabel}
-                        </Button>
-                    </Link>
-                </Col>}
-            </Row>
+            {selectedLang &&
+            <Link to={gdsLang} className='start-survey-button'>
+                <button className='button selected'>
+                    {selectedLang.startLabel}
+                </button>
+            </Link>
+            }
         </div>
     );
 };

@@ -3,7 +3,7 @@
 }
 
 .navigate-col {
-    padding: 16px;
+    display: flex;
 }
 .navigate-button {
     width: 100%;
@@ -11,4 +11,7 @@
 
 .gds-logo {
     min-height: 150px;
+}
+.page-header {
+    margin-top: 32px;
 }

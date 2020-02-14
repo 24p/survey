@@ -1,6 +1,26 @@
 
-.lang-button {
-    width: 100%;
+.button {
+    -webkit-appearance: button;
+    width: 30%;
+    margin: 8px;
+    padding: 8px;
+    border: 1px #AAA dashed;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all 0.2s linear;
+}
+
+.button:focus {
+    outline: none;
+    border-color: #2bb1ff;
+}
+.button:active {
+    outline: none;
+    border-color: #2bb1ff;
+}
+.button.selected {
+    background: #2bb1ff;
+    color: #FFF;
 }
 
 .start-survey-button, .start-survey-button button {

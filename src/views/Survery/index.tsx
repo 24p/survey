@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import './styles.css';
 import { get } from '../../utilities/xhr';
 import { useLocalStorage } from '../../utilities/hooks';
-import { Button, Col, Row } from 'antd';
 import { LANG_SET } from '../LangSelect';
 import { SurveyPage } from '../../components/SurveyPage';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
@@ -56,10 +55,11 @@ export type MultiQuestion = {
     options: ReadonlyArray<ImageOption | TextOption>
 }
 
+export type Question = MultiQuestion | TextQuestion | DateQuestion | NumberQuestion;
 export type Page = {
     name: string;
     conditions?: ReadonlyArray<Condition>;
-    questions: ReadonlyArray<MultiQuestion | TextQuestion | DateQuestion | NumberQuestion>;
+    questions: ReadonlyArray<Question>;
 };
 
 const checkCondition = (condition: Condition) => {
@@ -106,9 +106,7 @@ const conditionsFulfilled = (page: Page): boolean => {
     }
 
     // if one condition is not fulfilled, returns false
-    page.conditions.forEach(checkCondition);
-
-    return true;
+    return page.conditions.some((condition) => !checkCondition(condition));
 };
 
 export const Survey = () => {
@@ -153,8 +151,10 @@ export const Survey = () => {
         return <LoadingIndicator />;
     }
 
-    if (page > survey.length) {
+    if (page > survey.length -1) {
         // TODO return submit page
+        setPage(0);
+        location.pathname = '/';
 
         return <LoadingIndicator />;
     }
@@ -169,50 +169,38 @@ export const Survey = () => {
 
     return (
         <div className='page'>
-            <Row>
-                <Col span={24}>
-                    <img
-                        src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
-                        alt='Global Drugs Survey'
-                        width='100%'
-                        height='auto'
-                    />
-                </Col>
-            </Row>
-            <Row>
-                <Col
-                    span={24}
-                    className='loading-col'
-                >
-                    <SurveyPage page={selectedPage} />
-                </Col>
-            </Row>
+            <img
+                src='https://www.globaldrugsurvey.com/wp-content/themes/globaldrugsurvey/assets/img/header-logo-mobile@2x.png'
+                alt='Global Drugs Survey'
+                width='100%'
+                height='auto'
+            />
+            <div
+                className='loading-col'
+            >
+                <div
+                    className='page-header'
+                    onClick={onPreviousPageClick}
+                />
+                <SurveyPage page={selectedPage} />
+            </div>
             <br/><hr/><br/>
-            <Row gutter={[32, 32]}>
-                <Col
-                    span={12}
-                    className='navigate-col'
+            <div
+                className='navigate-col'
+            >
+                <button
+                    className='navigate-button button'
+                    onClick={onPreviousPageClick}
                 >
-                    <Button
-                        size='large'
-                        type='dashed'
-                        className='navigate-button'
-                        onClick={onPreviousPageClick}
-                    >
-                        {selectedLang.previousPageLabel}
-                    </Button>
-                </Col>
-                <Col span={12}>
-                    <Button
-                        size='large'
-                        type='primary'
-                        className='navigate-button'
-                        onClick={onNextPageClick}
-                    >
-                        {selectedLang.nextPageLabel}
-                    </Button>
-                </Col>
-            </Row>
+                    {selectedLang.previousPageLabel}
+                </button>
+                <button
+                    className='navigate-button button selected'
+                    onClick={onNextPageClick}
+                >
+                    {selectedLang.nextPageLabel}
+                </button>
+            </div>
         </div>
     );
 };
