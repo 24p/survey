@@ -84,7 +84,7 @@ export const Survey = () => {
 
     const onPreviousPageClick = () => {
         if (page === 0) {
-            history.back();
+            location.pathname = '/';
             return;
         }
         setPage( (page: number) => page -1 );
