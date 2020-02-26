@@ -1,21 +1,23 @@
 import React, { ChangeEvent, useRef } from 'react';
 
 import './styles.css';
-import { Page, Question } from '../../views/Survery';
+import { ImageOption, Page, Question, TextOption } from '../../views/Survery';
 import { useLocalStorage } from '../../utilities/hooks';
+import DatePicker from 'react-datepicker';
 
 const QuestionComponent = (
     {question}: {question: Question}
 ) => {
-    const [answer, setAnswer] = useLocalStorage(question.name, null);
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) =>
+    const [answer, setAnswer] = useLocalStorage(question.name, '');
+    const handleInputChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) =>
         setAnswer(event.target.value);
-
 
     switch (question.type) {
         case 'number':
-            const min = question?.minValue ?? 10;
-            const max = question?.maxValue ?? 99999;
+            const min = question?.minValue ?? undefined;
+            const max = question?.maxValue ?? undefined;
             return <div
                 key={question.name}
                 className='question'
@@ -35,7 +37,8 @@ const QuestionComponent = (
                 </div>
             </div>;
         case 'text':
-            // const minLength = question?.minCharacters ?? '';
+            const minCharacters = question?.minCharacters ?? undefined;
+            const maxCharacters = question?.maxCharacters ?? undefined;
             return <div
                 key={question.name}
                 className='question'
@@ -44,6 +47,8 @@ const QuestionComponent = (
                 <input
                     type='text'
                     name={question.name}
+                    minLength={minCharacters}
+                    maxLength={maxCharacters}
                     value={answer}
                     onChange={handleInputChange}
                 />
@@ -54,12 +59,9 @@ const QuestionComponent = (
                 className='question'
             >
                 <label htmlFor={question.name}>{question.title}</label>
-                <input
-                    type='text'
-                    name={question.name}
-                    value={answer}
-                    onChange={handleInputChange}
-                />
+                <DatePicker
+                    selected={answer || new Date()}
+                    onChange={setAnswer} />
             </div>;
         case 'multi':
             return <div
@@ -67,12 +69,36 @@ const QuestionComponent = (
                 className='question'
             >
                 <label htmlFor={question.name}>{question.title}</label>
-                <input
-                    type='text'
+                <select
                     name={question.name}
                     value={answer}
                     onChange={handleInputChange}
-                />
+                >
+                    {
+                        question.options.map(
+                            (option: ImageOption | TextOption, i) => {
+                                switch(option.type) {
+                                    case 'image':
+                                        return <option
+                                            value={option.name}
+                                            key={`${option.name}_${i}`}
+                                            style={{
+                                                backgroundImage: option.url
+                                            }}
+                                        >
+                                        </option>;
+                                    case 'text':
+                                        return <option
+                                            value={option.name}
+                                            key={`${option.name}_${i}`}
+                                        >
+                                            {option.title}
+                                        </option>;
+                                }
+                            }
+                        )
+                    }
+                </select>
             </div>;
         default:
             return null;
