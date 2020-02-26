@@ -20,6 +20,8 @@ export type NumberQuestion = {
     type: 'number';
     name: string;
     title: string;
+    minValue: number;
+    maxValue: number;
 };
 
 export type DateQuestion = {
@@ -109,7 +111,7 @@ const conditionsFulfilled = (page: Page): boolean => {
     return page.conditions.some((condition) => !checkCondition(condition));
 };
 
-export const Survey = () => {
+export const  Survey = () => {
     const {lang, surveyId} = useParams();
     if(!lang) {
 
@@ -136,7 +138,7 @@ export const Survey = () => {
             // fetch survey with lang and surveyId
             try {
                 const response = await get(
-                    'https://api.myjson.com/bins/15kkqw'
+                    'https://api.myjson.com/bins/9vld0'
                     // `gds-platform.com/survey/${surveyId}/${lang}.json`
                 );
                 setSurvey(response);
@@ -182,7 +184,11 @@ export const Survey = () => {
                     className='page-header'
                     onClick={onPreviousPageClick}
                 />
-                <SurveyPage page={selectedPage} />
+                <SurveyPage
+                    page={selectedPage}
+                    selectedLang={selectedLang}
+                    onSubmit={onNextPageClick}
+                />
             </div>
             <br/><hr/><br/>
             <div
@@ -193,12 +199,6 @@ export const Survey = () => {
                     onClick={onPreviousPageClick}
                 >
                     {selectedLang.previousPageLabel}
-                </button>
-                <button
-                    className='navigate-button button selected'
-                    onClick={onNextPageClick}
-                >
-                    {selectedLang.nextPageLabel}
                 </button>
             </div>
         </div>

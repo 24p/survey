@@ -10,7 +10,7 @@ export const LANG_SET = new Map([
             label: 'English',
             startLabel: 'Start the survey',
             nextPageLabel: 'next page',
-            previousPageLabel: 'previous page   ',
+            previousPageLabel: 'previous page',
         },
     ],
     [
