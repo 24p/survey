@@ -1,14 +1,16 @@
-import React, { ChangeEvent, useRef } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 
 import './styles.css';
 import { ImageOption, Page, Question, TextOption } from '../../views/Survery';
 import { useLocalStorage } from '../../utilities/hooks';
-import DatePicker from 'react-datepicker';
+import { SingleDatePicker } from 'react-dates';
+import moment from 'moment';
 
 const QuestionComponent = (
     {question}: {question: Question}
 ) => {
     const [answer, setAnswer] = useLocalStorage(question.name, '');
+    const [focused, setFocued] = useState(false);
     const handleInputChange = (
         event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) =>
@@ -59,9 +61,14 @@ const QuestionComponent = (
                 className='question'
             >
                 <label htmlFor={question.name}>{question.title}</label>
-                <DatePicker
-                    selected={answer || new Date()}
-                    onChange={setAnswer} />
+                <SingleDatePicker
+                    id={question.name}
+                    focused={focused}
+                    onFocusChange={(props: any ) => {
+                        setFocued(props.focused)
+                    }}
+                    date={moment(answer || new Date())}
+                    onDateChange={setAnswer} />
             </div>;
         case 'multi':
             return <div
@@ -140,7 +147,7 @@ export const SurveyPage = (
                         question={question}
                         key={`question_${i}`}
                     />
-                )
+            )
             }
 
             <input
