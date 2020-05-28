@@ -24,7 +24,11 @@ const QuestionComponent = (
                 key={question.name}
                 className='question'
             >
-                <label htmlFor={question.name}>{question.title}</label>
+                <label htmlFor={question.name}>
+                    <h2>
+                        {question.title}
+                    </h2>
+                </label>
                 <input
                     type='number'
                     id={question.name}
@@ -45,7 +49,11 @@ const QuestionComponent = (
                 key={question.name}
                 className='question'
             >
-                <label htmlFor={question.name}>{question.title}</label>
+                <label htmlFor={question.name}>
+                    <h2>
+                        {question.title}
+                    </h2>
+                </label>
                 <input
                     type='text'
                     name={question.name}
@@ -60,7 +68,11 @@ const QuestionComponent = (
                 key={question.name}
                 className='question'
             >
-                <label htmlFor={question.name}>{question.title}</label>
+                <label htmlFor={question.name}>
+                    <h2>
+                        {question.title}
+                    </h2>
+                </label>
                 <SingleDatePicker
                     id={question.name}
                     focused={focused}
@@ -68,14 +80,21 @@ const QuestionComponent = (
                         setFocued(props.focused)
                     }}
                     date={moment(answer || new Date())}
-                    onDateChange={setAnswer} />
+                    onDateChange={setAnswer}
+                    noBorder={true}
+                    numberOfMonths={1}
+                />
             </div>;
         case 'multi':
             return <div
                 key={question.name}
                 className='question'
             >
-                <label htmlFor={question.name}>{question.title}</label>
+                <label htmlFor={question.name}>
+                    <h2>
+                        {question.title}
+                    </h2>
+                </label>
                 <select
                     name={question.name}
                     value={answer}

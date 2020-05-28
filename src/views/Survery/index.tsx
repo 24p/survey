@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
-import { get } from '../../utilities/xhr';
 import { useLocalStorage } from '../../utilities/hooks';
 import { LANG_SET } from '../LangSelect';
 import { SurveyPage } from '../../components/SurveyPage';
@@ -113,14 +112,12 @@ const conditionsFulfilled = (page: Page): boolean => {
 
 export const  Survey = () => {
     const {lang, surveyId} = useParams();
-    if(!lang) {
-
-        return null;
-    }
-    const selectedLang = LANG_SET.get(lang);
+    const selectedLang = lang ? LANG_SET.get(lang) : null;
 
     const [survey, setSurvey] = useLocalStorage<ReadonlyArray<Page> | null>('gds_survey', null);
     const [page, setPage] = useLocalStorage<number>('gds_page', 0);
+
+    console.log(JSON.stringify(survey))
 
     const onPreviousPageClick = () => {
         if (page === 0) {
@@ -134,19 +131,13 @@ export const  Survey = () => {
     };
 
     useEffect(() => {
-        (async () => {
-            // fetch survey with lang and surveyId
-            try {
-                const response = await get(
-                    'https://api.myjson.com/bins/9vld0'
-                    // `gds-platform.com/survey/${surveyId}/${lang}.json`
-                );
-                setSurvey(response);
-            }
-            catch(err) {
-                console.warn(err);
-            }
-        })();
+        fetch(
+            'https://api.myjson.com/bins/iitja'
+            // `gds-platform.com/survey/${surveyId}/${lang}.json`
+        )
+            .then( (data: any) => data.json() )
+            .then(setSurvey)
+            .catch(console.warn);
     }, [lang, surveyId]);
 
     if (!survey || !selectedLang) {
@@ -163,7 +154,7 @@ export const  Survey = () => {
 
     const selectedPage: Page = survey[page];
 
-    if (!conditionsFulfilled(page)) {
+    if (!conditionsFulfilled(selectedPage)) {
         setPage((page: number) => page + 1);
 
         return <LoadingIndicator />;
