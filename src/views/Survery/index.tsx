@@ -110,7 +110,7 @@ const conditionsFulfilled = (page: Page): boolean => {
     return page.conditions.some((condition) => !checkCondition(condition));
 };
 
-export const  Survey = () => {
+export const Survey = () => {
     const {lang, surveyId} = useParams();
     const selectedLang = lang ? LANG_SET.get(lang) : null;
 
@@ -124,10 +124,10 @@ export const  Survey = () => {
             location.pathname = '/';
             return;
         }
-        setPage( (page: number) => page -1 );
+        setPage( (p: number) => p -1 );
     };
     const onNextPageClick = () => {
-        setPage((page: number) => page + 1);
+        setPage((p: number) => p + 1);
     };
 
     useEffect(() => {
@@ -155,7 +155,7 @@ export const  Survey = () => {
     const selectedPage: Page = survey[page];
 
     if (!conditionsFulfilled(selectedPage)) {
-        setPage((page: number) => page + 1);
+        setPage((p: number) => p + 1);
 
         return <LoadingIndicator />;
     }
