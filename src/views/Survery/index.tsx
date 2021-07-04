@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
-import { useLocalStorage } from '../../utilities/hooks';
+import { fetchSurvey, useLocalStorage } from '../../utilities/hooks';
 import { LANG_SET } from '../LangSelect';
 import { SurveyPage } from '../../components/SurveyPage';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
@@ -18,7 +18,7 @@ export type Condition = [
 export type NumberQuestion = {
     type: 'number';
     name: string;
-    title: string;
+    description: string;
     minValue: number;
     maxValue: number;
 };
@@ -26,41 +26,43 @@ export type NumberQuestion = {
 export type DateQuestion = {
     type: 'date';
     name: string;
-    title: string;
+    description: string;
 };
 
 export type TextQuestion = {
     type: 'text';
     name: string;
-    title: string;
+    description: string;
     maxCharacters?: number;
     minCharacters?: number;
 }
 
-export type ImageOption = {
-    type: 'image';
+export type RatingQuestion = {
+    type: 'rating';
     name: string;
-    url: string;
+    description: string;
+    length: number
 }
-export type TextOption = {
-    type: 'text';
+
+export type Option = {
     name: string;
-    title: string;
+    description: string;
 }
 export type MultiQuestion = {
     type: 'multi',
     name: string;
-    title: string;
+    description: string;
     maxOptions: number;
     minOptions: number;
-    options: ReadonlyArray<ImageOption | TextOption>
+    options: ReadonlyArray<Option>
 }
 
-export type Question = MultiQuestion | TextQuestion | DateQuestion | NumberQuestion;
+export type Question = MultiQuestion | TextQuestion | DateQuestion | NumberQuestion | RatingQuestion;
 export type Page = {
     name: string;
+    description: string;
     conditions?: ReadonlyArray<Condition>;
-    questions: ReadonlyArray<Question>;
+    items: ReadonlyArray<Question>;
 };
 
 const checkCondition = (condition: Condition) => {
@@ -117,8 +119,6 @@ export const Survey = () => {
     const [survey, setSurvey] = useLocalStorage<ReadonlyArray<Page> | null>('gds_survey', null);
     const [page, setPage] = useLocalStorage<number>('gds_page', 0);
 
-    console.log(JSON.stringify(survey))
-
     const onPreviousPageClick = () => {
         if (page === 0) {
             location.pathname = '/';
@@ -131,19 +131,22 @@ export const Survey = () => {
     };
 
     useEffect(() => {
-        fetch(
-            'https://api.myjson.com/bins/iitja'
-            // `gds-platform.com/survey/${surveyId}/${lang}.json`
+        if (!surveyId) {
+            return;
+        }
+
+        fetchSurvey(
+            surveyId,
+        ).then(
+            setSurvey,
+        ).catch(
+            console.error
         )
-            .then( (data: any) => data.json() )
-            .then(setSurvey)
-            .catch(console.warn);
     }, [lang, surveyId]);
 
     if (!survey || !selectedLang) {
         return <LoadingIndicator />;
     }
-
     if (page > survey.length -1) {
         // TODO return submit page
         setPage(0);
@@ -152,7 +155,7 @@ export const Survey = () => {
         return <LoadingIndicator />;
     }
 
-    const selectedPage: Page = survey[page];
+    const selectedPage: Page = survey.sections[page];
 
     if (!conditionsFulfilled(selectedPage)) {
         setPage((p: number) => p + 1);

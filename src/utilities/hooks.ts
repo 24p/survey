@@ -1,4 +1,32 @@
 import { useEffect, useState } from 'react';
+import { apiGraphQLClient } from './graphQlClient';
+
+const SO7_SURVEY_QUERY = `
+    query(
+        $surveyId: ID,
+    ){
+        survey(
+            surveyId: $surveyId,
+        ){
+            id,
+            meta{
+                name
+            },
+            config,
+            sections
+        }
+    }
+`;
+
+const SO7_TRANSLATION_QUERY = `
+    query(
+        $id: ID,
+    ){
+        translation(
+            id: $id,
+        )
+    }
+`;
 
 export function useDebounce<T>(value: T, delay: number = 500) {
     // State and setters for debounced value
@@ -57,3 +85,47 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 
     return [storedValue, setValue];
 }
+
+export const fetchSurvey = async (
+    surveyId: string,
+): Promise<any | null> => {
+    const variables = {
+        surveyId,
+    };
+
+    try {
+        const responseData = await apiGraphQLClient.unauthorizedRequest<any, { survey: any }>(
+            SO7_SURVEY_QUERY,
+            variables,
+        );
+
+        return responseData?.survey ?? null;
+    } catch (err) {
+        console.error(JSON.stringify(err?.message));
+
+        return null;
+    }
+};
+
+export const fetchTranslation = async (
+    id: string,
+    language: string,
+): Promise<any | null> => {
+    const variables = {
+        id,
+    };
+
+    try {
+        const responseData = await apiGraphQLClient.unauthorizedRequest<any, any>(
+            SO7_TRANSLATION_QUERY,
+            variables,
+        );
+        console.log("-> responseData", responseData);
+
+        return responseData?.translation?.[language] ?? 'NOT FOUND';
+    } catch (err) {
+        console.error(JSON.stringify(err?.message));
+
+        return null;
+    }
+};

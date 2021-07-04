@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
+    "graphql": "^15.5.1",
+    "graphql-request": "^3.4.0",
     "moment": "^2.18.1",
     "parcel-bundler": "1.12.3",
     "react": ">=16.0.0",
