@@ -4,7 +4,7 @@ import { LangSelectPage } from '../LangSelect';
 import { Survey } from '../Survery';
 import './styles.css';
 
-const SURVEY_ID = 'xxx-xxxx-xxxx-xxxx';
+const SURVEY_ID = 'gds-2022';
 
 const LangComponent = () => {
     const {lang} = useParams();
