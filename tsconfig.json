@@ -9,7 +9,7 @@
       "dom"
     ],
     "sourceMap": true,
-    "allowJs": true,
+    "allowJs": false,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": ".",
@@ -23,9 +23,6 @@
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "paths" : {
-      "redux-resource": ["./src/typings/reduxResource.d.ts"]
-    }
   },
   "exclude": [
     "node_modules",
